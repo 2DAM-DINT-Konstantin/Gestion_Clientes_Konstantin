@@ -60,6 +60,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jMenu3.setText("Clients");
 
         alta.setText("Alta...");
+        alta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                altaActionPerformed(evt);
+            }
+        });
         jMenu3.add(alta);
 
         jMenuBar1.add(jMenu3);
@@ -84,6 +89,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void altaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altaActionPerformed
+       DialogoAlta dialogoAlta = new DialogoAlta(this, true); // true = modal
+        dialogoAlta.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_altaActionPerformed
 
     /**
      * @param args the command line arguments
