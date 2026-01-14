@@ -4,6 +4,9 @@
  */
 package gui;
 
+import dto.Cliente;
+import java.util.Date;
+
 /**
  *
  * @author konatasht
@@ -15,9 +18,13 @@ public class DialogoAlta extends javax.swing.JDialog {
     /**
      * Creates new form DialogoAlta
      */
+    private PantallaPrincipal pantallaPrincipal;
+
+    
     public DialogoAlta(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        pantallaPrincipal = (PantallaPrincipal) parent;
     }
 
     /**
@@ -55,6 +62,11 @@ public class DialogoAlta extends javax.swing.JDialog {
         jcbProvincia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Asturias", "Cantabria", "León" }));
 
         jButton1.setText("Alta");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -122,6 +134,17 @@ public class DialogoAlta extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String nombre = jtfNombre.getText();
+    String apellidos = jtfApellidos.getText();
+    Date fechaAlta = (Date) spinnerFechaAlta.getValue(); // cast desde Object
+    String provincia = (String) jcbProvincia.getSelectedItem(); // cast desde Object
+    Cliente cliente = new Cliente(nombre, apellidos, fechaAlta, provincia);
+    pantallaPrincipal.anadirCliente(cliente);
+    dispose(); // cierra y libera recursos; mejor que setVisible(false)
+// TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

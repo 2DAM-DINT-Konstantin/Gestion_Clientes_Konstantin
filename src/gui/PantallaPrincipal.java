@@ -4,6 +4,8 @@
  */
 package gui;
 
+import dto.Cliente;
+
 /**
  *
  * @author konatasht
@@ -130,4 +132,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    void anadirCliente(Cliente cliente) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
