@@ -1,5 +1,6 @@
 package dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Cliente {
@@ -15,6 +16,15 @@ public class Cliente {
     this.provincia = provincia;
  }
     
+    
+     public String[] toArrayString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return new String[]{
+            nombre,
+            apellidos,
+            sdf.format(fechaAlta),  // Formatear fecha aquí
+            provincia
+        };
     
  // Getters y setters (puedes generarlos con Alt+Insert)
  public String getNombre() { return nombre; }
