@@ -15,17 +15,7 @@ public class Cliente {
     this.fechaAlta = fechaAlta;
     this.provincia = provincia;
  }
-    
-    
-     public String[] toArrayString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return new String[]{
-            nombre,
-            apellidos,
-            sdf.format(fechaAlta),  // Formatear fecha aquí
-            provincia
-        };
-    
+     
  // Getters y setters (puedes generarlos con Alt+Insert)
  public String getNombre() { return nombre; }
  public void setNombre(String nombre) { this.nombre = nombre; }
@@ -37,6 +27,12 @@ public class Cliente {
  public void setProvincia(String provincia) { this.provincia = provincia; }
  // Para volcar el objeto en la tabla:
  public String[] toArrayString() {
- return new String[]{ nombre, apellidos, fechaAlta.toString(), provincia };
- }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return new String[]{
+            nombre,
+            apellidos,
+            sdf.format(fechaAlta),  // Formatear fecha aquí
+            provincia
+        };
+    }
 }
