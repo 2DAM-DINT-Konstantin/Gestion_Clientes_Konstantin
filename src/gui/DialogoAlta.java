@@ -136,13 +136,23 @@ public class DialogoAlta extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nombre = jtfNombre.getText();
-    String apellidos = jtfApellidos.getText();
-    Date fechaAlta = (Date) spinnerFechaAlta.getValue(); // cast desde Object
-    String provincia = (String) jcbProvincia.getSelectedItem(); // cast desde Object
+        String nombre = jtfNombre.getText().trim();
+    String apellidos = jtfApellidos.getText().trim();
+    
+    // Validación de campos obligatorios
+    if (nombre.isEmpty() || apellidos.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Los campos Nombre y Apellidos son obligatorios.",
+            "Error de validación",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+        return; // No continuar si la validación falla
+    }
+    
+    Date fechaAlta = (Date) spinnerFechaAlta.getValue();
+    String provincia = (String) jcbProvincia.getSelectedItem();
     Cliente cliente = new Cliente(nombre, apellidos, fechaAlta, provincia);
     pantallaPrincipal.anadirCliente(cliente);
-    dispose(); // cierra y libera recursos; mejor que setVisible(false)
+    dispose();
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
