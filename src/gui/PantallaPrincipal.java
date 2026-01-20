@@ -39,9 +39,133 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         initComponents(); // generado por NetBeans
         inicializarTabla(); // SIEMPRE después de initComponents()
         configurarOrdenacion(); // Configurar ordenación
+        aplicarEstilos(); // Añadir esta línea
         
 
     }
+    
+    private void aplicarEstilos() {
+    // Configurar colores
+    java.awt.Color colorFondo = new java.awt.Color(245, 245, 250);
+    java.awt.Color colorPrincipal = new java.awt.Color(70, 130, 180);
+    java.awt.Color colorSecundario = new java.awt.Color(100, 149, 237);
+    
+    // Fondo de la ventana
+    getContentPane().setBackground(colorFondo);
+    
+    // Configurar tabla
+    java.awt.Font fuenteTabla = new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12);
+    clientes.setFont(fuenteTabla);
+    clientes.setRowHeight(25);
+    clientes.setGridColor(new java.awt.Color(220, 220, 220));
+    clientes.setShowGrid(true);
+    clientes.setSelectionBackground(new java.awt.Color(220, 240, 255));
+    clientes.setSelectionForeground(java.awt.Color.BLACK);
+    
+    // Encabezado de la tabla
+    clientes.getTableHeader().setFont(fuenteTabla.deriveFont(java.awt.Font.BOLD, 12));
+    clientes.getTableHeader().setBackground(colorPrincipal);
+    clientes.getTableHeader().setForeground(java.awt.Color.WHITE);
+    clientes.getTableHeader().setReorderingAllowed(false);
+    
+    // Configurar botones CON ICONOS (usando emojis como solución rápida)
+    java.awt.Font fuenteBoton = new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12);
+    
+    // Botón Guardar (verde) con icono 💾
+    btnGuardar.setText("💾 Guardar");
+    btnGuardar.setBackground(new java.awt.Color(76, 175, 80)); // Verde
+    btnGuardar.setForeground(java.awt.Color.WHITE);
+    btnGuardar.setFont(fuenteBoton);
+    btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+    btnGuardar.setFocusPainted(false);
+    
+    // Botón Cargar (azul) con icono 📂
+    btnCargar.setText("📂 Cargar");
+    btnCargar.setBackground(new java.awt.Color(33, 150, 243)); // Azul
+    btnCargar.setForeground(java.awt.Color.WHITE);
+    btnCargar.setFont(fuenteBoton);
+    btnCargar.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+    btnCargar.setFocusPainted(false);
+    
+    // Botón Eliminar (rojo) con icono 🗑️
+    btnEliminar.setText("🗑️ Eliminar");
+    btnEliminar.setBackground(new java.awt.Color(244, 67, 54)); // Rojo
+    btnEliminar.setForeground(java.awt.Color.WHITE);
+    btnEliminar.setFont(fuenteBoton);
+    btnEliminar.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+    btnEliminar.setFocusPainted(false);
+    
+    // Botón Buscar (naranja) con icono 🔍
+    btnBuscar.setText("🔍 Buscar");
+    btnBuscar.setBackground(new java.awt.Color(255, 152, 0)); // Naranja
+    btnBuscar.setForeground(java.awt.Color.WHITE);
+    btnBuscar.setFont(fuenteBoton);
+    btnBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+    btnBuscar.setFocusPainted(false);
+    
+    // Campo de búsqueda con icono en el placeholder
+    campoBusqueda.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+    campoBusqueda.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+        javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 200, 200), 1, true),
+        javax.swing.BorderFactory.createEmptyBorder(5, 30, 5, 10)
+    ));
+    
+    // Crear un panel personalizado para el campo de búsqueda con icono
+    javax.swing.JPanel panelBusqueda = new javax.swing.JPanel(new java.awt.BorderLayout());
+    panelBusqueda.setBackground(java.awt.Color.WHITE);
+    panelBusqueda.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+    
+    // Icono de lupa en el campo de búsqueda (usando JLabel)
+    javax.swing.JLabel iconoLupa = new javax.swing.JLabel("🔍");
+    iconoLupa.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 8, 0, 0));
+    iconoLupa.setForeground(new java.awt.Color(150, 150, 150));
+    
+    panelBusqueda.add(iconoLupa, java.awt.BorderLayout.WEST);
+    panelBusqueda.add(campoBusqueda, java.awt.BorderLayout.CENTER);
+    
+    // Configurar menú con iconos
+    jMenuBar1.setBackground(new java.awt.Color(240, 240, 240));
+    jMenuBar1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+    
+    // Configurar ítems del menú con iconos
+    jMenu1.setText("📁 File");
+    jMenu2.setText("✏️ Edit");
+    jMenu3.setText("👥 Clients");
+    alta.setText("➕ Alta...");
+    
+    // Configurar ScrollPane con borde y título con icono
+    jScrollPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(
+        javax.swing.BorderFactory.createLineBorder(colorSecundario, 2),
+        "📋 Lista de Clientes",
+        javax.swing.border.TitledBorder.CENTER,
+        javax.swing.border.TitledBorder.TOP,
+        new java.awt.Font("Arial", java.awt.Font.BOLD, 14),
+        colorPrincipal
+    ));
+    
+    // Configurar título de la ventana con icono
+    setTitle("👥 Gestión de Clientes");
+    
+    // Configurar ícono de la ventana (opcional - si tienes archivo .png)
+    try {
+        // Si tienes un archivo icono.png en src/resources/
+        // java.net.URL iconURL = getClass().getResource("/resources/icono.png");
+        // if (iconURL != null) {
+        //     setIconImage(new javax.swing.ImageIcon(iconURL).getImage());
+        // }
+    } catch (Exception e) {
+        System.out.println("No se pudo cargar el ícono de la ventana: " + e.getMessage());
+    }
+    
+    // Aplicar tooltips
+    btnGuardar.setToolTipText("Guardar clientes en archivo");
+    btnCargar.setToolTipText("Cargar clientes desde archivo");
+    btnEliminar.setToolTipText("Eliminar cliente seleccionado");
+    btnBuscar.setToolTipText("Buscar cliente por nombre");
+    campoBusqueda.setToolTipText("Buscar por nombre...");
+    alta.setToolTipText("Añadir nuevo cliente");
+}
+
     
      private void configurarOrdenacion() {
         // Obtener el modelo de la tabla
