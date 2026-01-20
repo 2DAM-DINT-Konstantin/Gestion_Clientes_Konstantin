@@ -218,8 +218,15 @@ private void filtrarTabla() {
     
     private void inicializarTabla() {
         DefaultTableModel dtm = new DefaultTableModel();
-        dtm.setColumnIdentifiers(new String[]{"Nombre", "Apellidos", "Fecha Alta", "Provincia"});
-        clientes.setModel(dtm); // 'clientes' es la JTable del diseñador
+    dtm.setColumnIdentifiers(new String[]{
+        "Nombre", 
+        "Apellidos", 
+        "Fecha Alta", 
+        "Provincia",
+        "Email",       // Nueva columna
+        "Teléfono"     // Nueva columna
+    });
+    clientes.setModel(dtm);
  }
 
     public void anadirCliente(Cliente cliente) {
