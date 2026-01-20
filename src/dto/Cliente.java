@@ -32,11 +32,11 @@ public class Cliente implements Serializable{
  // Para volcar el objeto en la tabla:
  public String[] toArrayString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return new String[]{
-            nombre,
-            apellidos,
-            sdf.format(fechaAlta),  // Formatear fecha aquí
-            provincia
-        };
+    return new String[]{
+        nombre,           // Columna 0: Nombre
+        apellidos,        // Columna 1: Apellidos  
+        sdf.format(fechaAlta),  // Columna 2: Fecha Alta
+        provincia         // Columna 3: Provincia
+    };
     }
 }
