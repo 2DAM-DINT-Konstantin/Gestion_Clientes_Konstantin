@@ -1,9 +1,13 @@
 package dto;
 
+import java.io.Serializable; // Añadir este import
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Cliente {
+public class Cliente implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
+    
     private String nombre;
     private String apellidos;
     private Date fechaAlta;

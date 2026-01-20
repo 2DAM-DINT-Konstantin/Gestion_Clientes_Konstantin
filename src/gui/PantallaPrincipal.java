@@ -7,6 +7,14 @@ package gui;
 import dto.Cliente;
 import javax.swing.table.DefaultTableModel;
 import dto.Cliente;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -15,6 +23,8 @@ import dto.Cliente;
  */
 public class PantallaPrincipal extends javax.swing.JFrame {
     
+    private List<Cliente> listaClientes = new ArrayList<>();
+    private static final String ARCHIVO_DATOS = "clientes.dat";
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName());
 
     /**
@@ -23,6 +33,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     public PantallaPrincipal() {
         initComponents(); // generado por NetBeans
         inicializarTabla(); // SIEMPRE después de initComponents()
+        
 
     }
     
@@ -33,12 +44,62 @@ public class PantallaPrincipal extends javax.swing.JFrame {
  }
 
     public void anadirCliente(Cliente cliente) {
+        // Añadir a la lista
+    listaClientes.add(cliente);
+    
+    // Añadir a la tabla
     DefaultTableModel dtm = (DefaultTableModel) clientes.getModel();
     dtm.addRow(cliente.toArrayString());
+    
+    // NO guardar automáticamente
+
  }
 
+    public void guardarDatos(){
+         try (ObjectOutputStream oos = new ObjectOutputStream(
+            new FileOutputStream(ARCHIVO_DATOS))) {
+        oos.writeObject(listaClientes);
+        System.out.println("Guardados " + listaClientes.size() + " clientes");
+    } catch (IOException e) {
+        logger.log(java.util.logging.Level.SEVERE, "Error al guardar datos", e);
+        // Añadir mensaje al usuario
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Error al guardar los datos: " + e.getMessage(),
+            "Error de guardado",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }
     
+    private void cargarDatos() {
+        File archivo = new File(ARCHIVO_DATOS);
     
+    if (!archivo.exists()) {
+        System.out.println("Archivo de datos no encontrado.");
+        return;
+    }
+    
+    try (ObjectInputStream ois = new ObjectInputStream(
+            new FileInputStream(ARCHIVO_DATOS))) {
+        
+        List<Cliente> clientesGuardados = (List<Cliente>) ois.readObject();
+        
+        // Limpiar primero
+        DefaultTableModel dtm = (DefaultTableModel) clientes.getModel();
+        dtm.setRowCount(0);
+        listaClientes.clear();
+        
+        // Añadir todos
+        for (Cliente cliente : clientesGuardados) {
+            listaClientes.add(cliente);
+            dtm.addRow(cliente.toArrayString());
+        }
+        
+        System.out.println("Cargados " + listaClientes.size() + " clientes desde archivo");
+        
+    } catch (IOException | ClassNotFoundException e) {
+        logger.log(java.util.logging.Level.SEVERE, "Error al cargar datos", e);
+    }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,6 +113,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jScrollPanel1 = new javax.swing.JScrollPane();
         clientes = new javax.swing.JTable();
         btnEliminar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnCargar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -77,6 +140,20 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        btnCargar.setText("Cargar");
+        btnCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarActionPerformed(evt);
             }
         });
 
@@ -107,8 +184,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(146, 146, 146)
-                        .addComponent(btnEliminar))
+                        .addGap(53, 53, 53)
+                        .addComponent(btnGuardar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEliminar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCargar))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -120,7 +201,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnEliminar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnCargar))
                 .addGap(15, 15, 15))
         );
 
@@ -134,20 +218,111 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_altaActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // Obtener la fila seleccionada en la tabla
-        DefaultTableModel tabla = (DefaultTableModel) clientes.getModel();
         int selectedRow = clientes.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Por favor, seleccione un cliente para eliminar.",
+            "Sin selección",
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+        return; // IMPORTANTE: añade este return
+    }
+    
+    // Obtener datos del cliente para el mensaje
+    DefaultTableModel dtm = (DefaultTableModel) clientes.getModel();
+    String nombre = (String) dtm.getValueAt(selectedRow, 0);
+    String apellidos = (String) dtm.getValueAt(selectedRow, 1);
+    
+    int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+        "¿Está seguro de que desea eliminar a " + nombre + " " + apellidos + "?",
+        "Confirmar eliminación",
+        javax.swing.JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+        // Eliminar SOLO de la tabla y de la lista en memoria
+        // PERO NO guardar en el archivo
+        dtm.removeRow(selectedRow);
+        listaClientes.remove(selectedRow);
         
-        // Verificar si hay una fila seleccionada
-        if (selectedRow != -1) {
-            tabla.removeRow(selectedRow);
-        }else {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Por favor, seleccione un cliente de la tabla para eliminar.",
-                    "Sin selección",
-                    javax.swing.JOptionPane.WARNING_MESSAGE);
+        // NO llamar a guardarDatos() aquí
+        // guardarDatos(); // <-- COMENTA o ELIMINA esta línea
+        
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Cliente eliminado de la lista (pero no del archivo guardado).\n" +
+            "Use 'Guardar' para sobrescribir el archivo.",
+            "Eliminación completada",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+         guardarDatos(); // Ya guarda en "clientes.dat"
+    javax.swing.JOptionPane.showMessageDialog(this,
+        "Clientes guardados en el archivo por defecto.\n" +
+        "Total: " + listaClientes.size() + " clientes",
+        "Guardado exitoso",
+        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
+         // Preguntar si quiere perder cambios no guardados
+    if (!listaClientes.isEmpty()) {
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Al cargar se perderán los cambios no guardados.\n" +
+            "¿Desea continuar?",
+            "Confirmar carga",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+            
+        if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+            return; // Cancelar si el usuario dice NO
+        }
+    }
+    
+    // Cargar desde el archivo
+    File archivo = new File(ARCHIVO_DATOS);
+    
+    if (!archivo.exists()) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "No hay archivo guardado.\n" +
+            "Primero guarde algunos clientes.",
+            "Archivo no encontrado",
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try (ObjectInputStream ois = new ObjectInputStream(
+            new FileInputStream(ARCHIVO_DATOS))) {
+        
+        // Leer la lista desde el archivo
+        List<Cliente> clientesGuardados = (List<Cliente>) ois.readObject();
+        
+        // Limpiar la tabla actual
+        DefaultTableModel dtm = (DefaultTableModel) clientes.getModel();
+        dtm.setRowCount(0);
+        
+        // Limpiar la lista actual
+        listaClientes.clear();
+        
+        // Añadir los clientes guardados
+        for (Cliente cliente : clientesGuardados) {
+            listaClientes.add(cliente);
+            dtm.addRow(cliente.toArrayString());
+        }
+        
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Clientes cargados desde el archivo.\n" +
+            "Total cargados: " + listaClientes.size() + " clientes",
+            "Carga exitosa",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+    } catch (IOException | ClassNotFoundException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Error al cargar el archivo: " + e.getMessage(),
+            "Error de carga",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnCargarActionPerformed
   
     /**
      * @param args the command line arguments
@@ -176,7 +351,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem alta;
+    private javax.swing.JButton btnCargar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JTable clientes;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -184,6 +361,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPanel1;
     // End of variables declaration//GEN-END:variables
+
+   
 
     
 }
